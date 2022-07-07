@@ -6,18 +6,42 @@ const authorSchema = new mongoose.Schema({
 	url: String,
 	email: {
 		type: String,
-		lowercase: true
-	}
+		validate: [
+			{
+				validator: function (v) {
+					return v.toLowerCase() === v;
+				},
+				message: 'Email must be lowercase.',
+			},
+			{
+				validator: function (v) {
+					return /^\S+@\S+\.\S+$/.test(v);
+				},
+				message: 'Please enter a valid email.',
+			},
+		],
+	},
 });
 
 const bookSchema = new mongoose.Schema({
 	title: {
 		type: String,
-		required: true
+		minLength: 5,
+		maxLength: 255,
+		required: true,
+		trim: true,
 	},
 	description: String,
-	numberOfPages: Number,
-	language: String,
+	numberOfPages: {
+		type: Number,
+		min: 10,
+		max: 2000,
+		required: true,
+	},
+	language: {
+		type: String,
+		trim: true,
+	},
 	imageUrl: String,
 	buyUrl: String,
 	whenPurchased: Date,
@@ -26,8 +50,8 @@ const bookSchema = new mongoose.Schema({
 	author: authorSchema,
 	whenCreated: {
 		type: Date,
-		default: () => Date.now()
-	}
+		default: () => Date.now(),
+	},
 });
 
 export const Book = mongoose.model('book', bookSchema);
