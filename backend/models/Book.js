@@ -24,6 +24,10 @@ const bookSchema = new mongoose.Schema({
 	relatedBook: mongoose.SchemaTypes.ObjectId,
 	topics: [String],
 	author: authorSchema,
+	whenCreated: {
+		type: Date,
+		default: () => Date.now()
+	}
 });
 
 export const Book = mongoose.model('book', bookSchema);
