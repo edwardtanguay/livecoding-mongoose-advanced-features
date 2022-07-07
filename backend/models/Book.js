@@ -4,11 +4,17 @@ const authorSchema = new mongoose.Schema({
 	firstName: String,
 	lastName: String,
 	url: String,
-	email: String
+	email: {
+		type: String,
+		lowercase: true
+	}
 });
 
 const bookSchema = new mongoose.Schema({
-	title: String,
+	title: {
+		type: String,
+		required: true
+	},
 	description: String,
 	numberOfPages: Number,
 	language: String,

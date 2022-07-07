@@ -30,7 +30,7 @@ app.post('/book', async (req, res) => {
 			book,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		res.status(400).json({ error: err.errors });
 	}
 });
 
