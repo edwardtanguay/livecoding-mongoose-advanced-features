@@ -34,6 +34,15 @@ app.post('/book', async (req, res) => {
 	}
 });
 
+app.get('/books-by-language/:language', async (req, res) => {
+    const language = req.params.language;
+    const books = await Book.where('language').equals(language).sort('title');
+    res.status(200).json({
+        message: `fetched all books in ${language}`,
+        books
+    })
+});
+
 app.get('/book', async (req, res) => {
 	const books = await Book.find().sort({ title: 1 });
 	res.status(200).json({
