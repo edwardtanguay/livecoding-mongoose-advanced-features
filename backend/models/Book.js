@@ -45,7 +45,10 @@ const bookSchema = new mongoose.Schema({
 	imageUrl: String,
 	buyUrl: String,
 	whenPurchased: Date,
-	relatedBook: mongoose.SchemaTypes.ObjectId,
+	relatedBook: {
+		type: mongoose.SchemaTypes.ObjectId,
+		ref: 'book'
+	},
 	topics: [String],
 	author: authorSchema,
 	whenCreated: {
