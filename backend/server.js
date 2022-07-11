@@ -61,6 +61,14 @@ app.get('/book/:id', async (req, res) => {
 	});
 });
 
+app.get('/short-english-books', async (req, res) => {
+	const books = await Book.findShortEnglishBooks();
+	res.status(200).json({
+		messge: `fetched all short books in English`,
+		books
+	});
+});
+
 app.put('/book/:id', async (req, res) => {
 	const id = req.params.id;
 	const oldBook = await Book.find({ _id: id });
