@@ -69,6 +69,15 @@ app.get('/short-english-books', async (req, res) => {
 	});
 });
 
+app.get('/short-books-by-language/:language', async (req, res) => {
+	const language = req.params.language;
+	const books = await Book.findShortBooksByLanguage(language);
+	res.status(200).json({
+		message: `fetchted all short books in ${language}`,
+		books
+	})
+});
+
 app.put('/book/:id', async (req, res) => {
 	const id = req.params.id;
 	const oldBook = await Book.find({ _id: id });
