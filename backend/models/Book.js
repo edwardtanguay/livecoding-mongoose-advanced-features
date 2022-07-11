@@ -49,7 +49,7 @@ const bookSchema = new mongoose.Schema({
 	whenPurchased: Date,
 	relatedBook: {
 		type: mongoose.SchemaTypes.ObjectId,
-		ref: 'book'
+		ref: 'book',
 	},
 	topics: [String],
 	author: authorSchema,
@@ -63,28 +63,47 @@ bookSchema.methods.enhanceTitle = function () {
 	if (this.numberOfPages >= 200) {
 		this.title = `${this.title} (long book)`;
 	}
-}
+};
 
 bookSchema.statics.findShortEnglishBooks = function () {
-	return this.where('language').equals('english').where('numberOfPages').lte(pageLimit);
-}
+	return this.where('language')
+		.equals('english')
+		.where('numberOfPages')
+		.lte(pageLimit);
+};
 
 bookSchema.statics.findShortBooksByLanguage = function (language) {
-	return this.where('language').equals(language).where('numberOfPages').lte(pageLimit);
-}
+	return this.where('language')
+		.equals(language)
+		.where('numberOfPages')
+		.lte(pageLimit);
+};
 
 bookSchema.query.byLanguage = function (language) {
 	return this.where('language').equals(language);
-}
+};
 
 bookSchema.query.isLongBook = function () {
 	return this.where('numberOfPages').gte(pageLimit);
-}
+};
 
 bookSchema.virtual('bookInfoText').get(function () {
 	return `${this.title}, ${this.numberOfPages} pages: ${this.description}`;
 });
 
 bookSchema.set('toJSON', { virtuals: true });
+
+bookSchema.pre('save', function (next) {
+	this.whenUpdated = Date.now();
+	// console.log(this.whenUpdated);
+	next();
+});
+
+bookSchema.post('save', function (doc, next) {
+	const dt = new Date();
+	const timestamp = dt.toISOString();
+	console.log(`${timestamp}: updated book "${doc.title}`);
+	next();
+});
 
 export const Book = mongoose.model('book', bookSchema);
